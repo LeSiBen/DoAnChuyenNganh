@@ -1,0 +1,39 @@
+﻿@model SACH
+
+<div class="col-xs-12">
+    <table style="border: none">
+        <tr>
+            <td rowspan="6">
+                <img src=@String.Concat("/Content/img/AnhBia/", @Model.AnhBia) style="height: 265px;" alt="" />
+            </td>
+            @if (Model.SoLuong_Ton > 0)
+            {
+                <td><b>Tình trạng: </b>Còn hàng</td>
+            }
+            else
+            {
+                <td><h4>Tình trạng: </h4>Hết hàng</td>
+            }
+        </tr>
+        <tr>
+            <td><b>@Model.Ten_Sach</b></td>
+        </tr>
+        <tr>
+            <td><b>Tác giả: </b>@Model.tacgia</td>
+        </tr>
+        <tr>
+            <td><b>Chủ đề: </b>@Model.ten_chude</td>
+        </tr>
+        <tr>
+            <td><b>NXB: </b>@Model.ten_nxb</td>
+        </tr>
+        <tr>
+            <td><b>Giá bán: </b>@String.Format("{0:N0}", @Model.Gia_Ban)</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <b>Tóm tắt: </b>@Model.MoTa
+            </td>
+        </tr>
+    </table>
+</div>

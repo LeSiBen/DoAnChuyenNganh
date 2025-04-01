@@ -1,0 +1,66 @@
+﻿@model KHACHHANG
+
+@{
+    ViewBag.Title = "Đăng ký thành viên";
+    Layout = "~/Views/Shared/_Layout_Login.cshtml";
+    //Model.url = ViewBag.Url;
+}
+
+
+<!-- start content -->
+<section id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <h2>ĐĂNG KÝ</h2>
+                    <hr class="colorgraph">
+
+                    <div class="form-group">
+                        @Html.HiddenFor(m => m.Ma_KhachHang, htmlAttributes: new { @class = "form-control input-lg" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.HoTen, htmlAttributes: new { @class = "form-control input-lg", @placeholder = "Họ tên khách hàng" })
+                        @Html.ValidationMessageFor(m => m.HoTen, "", htmlAttributes: new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(m => m.HoTen, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.Email, htmlAttributes: new { @class = "form-control input-lg", @placeholder = "Email" })
+                        @Html.ValidationMessageFor(m => m.Email, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.DiaChi, htmlAttributes: new { @class = "form-control input-lg", @placeholder = "Địa chỉ" })
+                        @Html.ValidationMessageFor(m => m.DiaChi, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.DienThoai, htmlAttributes: new { @class = "form-control input-lg", @placeholder = "Điện thoại" })
+                        @Html.ValidationMessageFor(m => m.DienThoai, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.TaiKhoan, htmlAttributes: new { @class = "form-control input-lg", @placeholder = "Tài khoản đăng nhập" })
+                        @Html.ValidationMessageFor(m => m.TaiKhoan, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.MatKhau, htmlAttributes: new { @class = "form-control input-lg", @placeholder = "Mật khẩu" })
+                        @Html.ValidationMessageFor(m => m.MatKhau, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.Repeat_Password, htmlAttributes: new { @class = "form-control input-lg", @placeholder = "Nhập lại mật khẩu" })
+                        @Html.ValidationMessageFor(m => m.Repeat_Password, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+
+                    <hr class="colorgraph">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 col-md-offset-6">
+                            <input type="submit" value="Đăng ký thành viên" class="btn btn-primary btn-block btn-lg" tabindex="7">
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end content -->

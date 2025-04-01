@@ -1,0 +1,476 @@
+﻿@model SACH
+
+@{
+    ViewBag.Title = "Them_Moi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-xs-12 col-lg-12">
+    @using (Html.BeginForm("Them_Moi", "Sach", FormMethod.Post, htmlAttributes: new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <h4>THÊM SẢN PHẨM MỚI</h4>
+        <hr />
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Mã sách</b>
+            </div>
+            <div class="col-xs-12 col-md-9">
+                @Html.TextBoxFor(m => m.Ma_Sach, htmlAttributes: new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Ma_Sach, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Tên sách</b>
+            </div>
+            <div class="col-xs-12 col-md-9">
+                @Html.TextBoxFor(m => m.Ten_Sach, htmlAttributes: new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Ten_Sach, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Tác giả</b>
+            </div>
+            <div class="col-xs-11 col-md-8">
+                @Html.TextBoxFor(m => m.tacgia, htmlAttributes: new { @class = "form-control", @readonly = "true", @id = "txt_TacGia" })
+            </div>
+            <div class="col-xs-11 col-md-1">
+                <button class="btn btn-default form-control" title="Danh sách Tác giả" data-toggle="modal" data-target=".bs-modal-lg_1"><b>+</b></button>
+            </div>
+            @Html.ValidationMessageFor(m => m.tacgia, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Ảnh bìa</b>
+            </div>
+            <div class="col-xs-10 col-md-7">
+                @Html.TextBoxFor(m => m.postedFile, htmlAttributes: new { @type = "file", @accept = "image/*", @onchange = "Preview(event)" })
+            </div>
+            <div class="col-xs-2 col-md-2">
+                <button class="btn btn-default form-control" data-toggle="modal" data-target=".bs-modal-lg_4">Xem ảnh</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Số lượng tồn</b>
+            </div>
+            <div class="col-xs-12 col-md-9">
+                @Html.TextBoxFor(m => m.SoLuong_Ton, htmlAttributes: new { @class = "form-control", @type = "number", @min = "0", @step = "1" })
+            </div>
+            @Html.ValidationMessageFor(m => m.SoLuong_Ton, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Giá bán</b>
+            </div>
+            <div class="col-xs-12 col-md-9">
+                @Html.TextBoxFor(m => m.Gia_Ban, htmlAttributes: new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Gia_Ban, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Nhà xuất bản</b>
+            </div>
+            <div class="col-xs-11 col-md-8">
+                <select onchange="Gan_NXB(this)" class="form-control" id="select_NXB">
+                    <option value=""></option>
+                    @{
+                        List<NHAXUATBAN> list_NXB = NXB_DAO.ReadAll();
+                        foreach (NHAXUATBAN nxb in list_NXB)
+                        {
+                            if (Model != null && Model.Ma_NXB == nxb.Ma_NXB)
+                            {
+                                <option selected value="@nxb.Ma_NXB">@nxb.Ten_NXB</option>
+                            }
+                            else
+                            {
+                                <option value="@nxb.Ma_NXB">@nxb.Ten_NXB</option>
+                            }
+                        }
+                    }
+                </select>
+                @Html.HiddenFor(m => m.Ma_NXB, htmlAttributes: new { @id = "Ma_NXB" })
+            </div>
+            <div class="col-xs-11 col-md-1">
+                <button class="btn btn-default form-control" title="Thêm NXB mới" data-toggle="modal" data-target=".bs-modal-lg_2"><b>+</b></button>
+                @Html.HiddenFor(m => m.ten_nxb, htmlAttributes: new { @id = "Ten_NXB_Moi" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Ma_NXB, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Chủ đề</b>
+            </div>
+            <div class="col-xs-11 col-md-8">
+                <select onchange="Gan_ChuDe(this)" class="form-control" id="selct_ChuDe">
+                    <option value=""></option>
+                    @{
+                        List<CHUDE> list_CD = CHUDE_DAO.ReadAll();
+                        foreach (CHUDE cd in list_CD)
+                        {
+                            if (Model != null && Model.Ma_ChuDe == cd.Ma_ChuDe)
+                            {
+                                <option selected value="@cd.Ma_ChuDe">@cd.Ten_ChuDe</option>
+                            }
+                            else
+                            {
+                                <option value="@cd.Ma_ChuDe">@cd.Ten_ChuDe</option>
+                            }
+                        }
+                    }
+                </select>
+                @Html.HiddenFor(m => m.Ma_ChuDe, htmlAttributes: new { @id = "Ma_ChuDe" })
+            </div>
+            <div class="col-xs-11 col-md-1">
+                <button class="btn btn-default form-control" title="Thêm Chủ đề mới" data-toggle="modal" data-target=".bs-modal-lg_3"><b>+</b></button>
+                @Html.HiddenFor(m => m.ten_chude, htmlAttributes: new { @id = "Ten_ChuDe_Moi" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Ma_ChuDe, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Mô tả</b>
+            </div>
+            <div class="col-xs-11 col-md-9">
+                @Html.TextAreaFor(m => m.MoTa, htmlAttributes: new { @rows = "3", @style = "width:100%;" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <b>Ngày cập nhật</b>
+            </div>
+            <div class="col-xs-11 col-md-9">
+                @if (Model != null && Model.Ngay_CapNhat != null)
+                {
+                    @Html.TextBoxFor(m => m.Ngay_CapNhat, htmlAttributes: new { @type = "date", @style = "width:100%;" })
+                }
+                else
+                {
+                    @Html.TextBoxFor(m => m.Ngay_CapNhat, htmlAttributes: new { @type = "date", @style = "width:100%;", @Value = DateTime.Now.ToString("yyyy-MM-dd") })
+                }
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-xs-3 col-md-2 col-md-offset-7">
+                <button type="submit" class="btn btn-default form-control">OK</button>
+            </div>
+            <div class="col-xs-3 col-md-2">
+                @Html.ActionLink("Cancel", "Danhmuc", "Sach", routeValues: null, htmlAttributes: new { @class = "btn btn-default form-control" })
+            </div>
+        </div>
+
+    }
+</div>
+
+<div class="modal fade bs-modal-lg_2" tabindex="-1" role="document" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">THÊM THÔNG TIN NHÀ XUẤT BẢN</h4>
+            </div>
+            <div class="modal-body" style="margin:0 10px 0 10px">
+                <!-- Body -->
+                <div class="row form-group" id="Body_Modal_2">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3">
+                            <b>Tên NXB mới</b>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            @Html.TextBox("Ten_NXB", "", htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3">
+                            <b>Địa chỉ</b>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            @Html.TextBox("DiaChi", "", htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3">
+                            <b>Số ĐT</b>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            @Html.TextBox("DienThoai", "", htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <hr />
+                <div class="row form-group">
+                    <button onclick="Them_NXB_Moi()" class="btn btn-default col-xs-3 col-xs-offset-5 col-md-2 col-md-offset-7" data-dismiss="modal">OK</button>
+                    <button class="btn btn-default col-xs-3 col-md-2" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-modal-lg_1" tabindex="-1" role="document" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">THÔNG TIN TÁC GIẢ</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Body -->
+                <div class="row form-group" style="margin:0 10px 0 10px;" id="Body_Modal_1">
+                    <table style="border:none; width:100%;" id="tbl_TacGia">
+                        <tr>
+                            <th style="padding: 0 0 10px 0;">Vị trí</th>
+                            <th>Tên Tác giả</th>
+                            <th>Vai trò</th>
+                            <th></th>
+                        </tr>
+                        @{
+                            List<TAC_GIA> list_TG = TACGIA_DAO.ReadAll();
+                            if (Model != null && Model.tacgia != null)
+                            {
+                                string[] abc = Model.tacgia.Split(new char[','], StringSplitOptions.RemoveEmptyEntries);
+                                for (int i = 0; i < abc.Count(); i++)
+                                {
+                                    <tr>
+                                        <td style="padding: 0 0 10px 0;"><input type="text" value="@(i+1)" /></td>
+                                        @if (abc[i].Contains("(Chủ Biên)"))
+                                        {
+                                            string ten_TG = abc[i].Substring(0, abc[i].Length - 10);
+                                            <td>
+                                                <input type="text" value="ten_TG" style="width:80%;" name="Ten_TG" />
+                                                <select onchange="Gan_TacGia(this)" style="width:20px;" name="select_Ten_TG">
+                                                    <option value=""></option>
+                                                    @foreach (TAC_GIA tg in list_TG)
+                                                    {
+                                                        if (ten_TG == tg.Ten_TacGia)
+                                                        {
+                                                            <option selected value="@tg.Ma_TacGia">@tg.Ten_TacGia</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@tg.Ma_TacGia">@tg.Ten_TacGia</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select style="width:90%;" name="select_Vaitro">
+                                                    <option selected value='Chủ Biên'>Chủ Biên</option>
+                                                    <option value='Tác Giả'>Tác Giả</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button onclick="ThemHang()"><b>+</b></button>
+                                                <button onclick="XoaHang(this)"><b>-</b></button>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <input type="text" value="@abc[i]" style="width:80%;" name="Ten_TG" />
+                                                <select onchange="Gan_TacGia(this)" style="width:20px;" name="select_Ten_TG">
+                                                    <option value=""></option>
+                                                    @foreach (TAC_GIA tg in list_TG)
+                                                    {
+                                                        if (abc[i] == tg.Ten_TacGia)
+                                                        {
+                                                            <option selected value="@tg.Ma_TacGia">@tg.Ten_TacGia</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@tg.Ma_TacGia">@tg.Ten_TacGia</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select style="width:90%;" name="select_Vaitro">
+                                                    <option value='Chủ Biên'>Chủ Biên</option>
+                                                    <option selected value='Tác Giả'>Tác Giả</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button onclick="ThemHang()"><b>+</b></button>
+                                                <button onclick="XoaHang(this)"><b>-</b></button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td style="padding: 0 0 10px 0;"><input type="text" /></td>
+                                    <td>
+                                        <input type="text" style="width:80%;" name="Ten_TG" />
+                                        <select onchange="Gan_TacGia(this)" style="width:20px;" name="select_Ten_TG">
+                                            <option value=""></option>
+                                            @foreach (TAC_GIA tg in list_TG)
+                                            {
+                                                <option value="@tg.Ma_TacGia">@tg.Ten_TacGia</option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select style="width:90%;" name="select_Vaitro">
+                                            <option value='Chủ Biên'>Chủ Biên</option>
+                                            <option selected value='Tác Giả'>Tác Giả</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button onclick="ThemHang()"><b>+</b></button>
+                                        <button onclick="XoaHang(this)"><b>-</b></button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                <!-- Footer -->
+                <hr />
+                <div class="row form-group">
+                    <button onclick="XacNhan_TacGia()" class="btn btn-default col-xs-3 col-xs-offset-5 col-md-2 col-md-offset-7" data-dismiss="modal">OK</button>
+                    <button class="btn btn-default col-xs-3 col-md-2" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bs-modal-lg_3" tabindex="-1" role="document" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">THÊM CHỦ ĐỀ</h4>
+            </div>
+            <div class="modal-body" style="margin:0 10px 0 10px">
+                <!-- Body -->
+                <div class="row form-group" id="Body_Modal_3">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3">
+                            <b>Tên Chủ đề mới</b>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            @Html.TextBox("Ten_ChuDe", "", htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <hr />
+                <div class="row form-group">
+                    <button onclick="Them_ChuDe_Moi()" class="btn btn-default col-xs-3 col-xs-offset-5 col-md-2 col-md-offset-7" data-dismiss="modal">OK</button>
+                    <button class="btn btn-default col-xs-3 col-md-2" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        function Gan_TacGia(_object) {
+            var _rowIndex = _object.offsetParent.parentNode.rowIndex;
+            document.getElementsByName("Ten_TG")[_rowIndex - 1].value = _object.options[_object.selectedIndex].text
+        }
+        function Gan_NXB(_object) {
+            document.getElementById("Ma_NXB").value = _object.value
+        }
+        function Gan_ChuDe(_object) {
+            document.getElementById("Ma_ChuDe").value = _object.value
+        }
+        function Them_NXB_Moi() {
+            var ten_NXB = document.getElementsByName("Ten_NXB")[0].value;
+            var diachi = document.getElementsByName("DiaChi")[0].value;
+            var sdt = document.getElementsByName("DienThoai")[0].value;
+
+            var str = ten_NXB + "," + diachi + "," + sdt
+            document.getElementById("Ten_NXB_Moi").value = str
+
+            var option = document.createElement("option");
+            option.value = -1;
+            option.text = ten_NXB;
+            option.selected = true;
+            document.getElementById("select_NXB").add(option);
+            document.getElementById("Ma_NXB").value = -1;
+        }
+        function Them_ChuDe_Moi() {
+            var ten_ChuDe = document.getElementsByName("Ten_ChuDe")[0].value;
+            document.getElementById("Ten_ChuDe_Moi").value = ten_ChuDe
+
+            var option = document.createElement("option");
+            option.value = -1;
+            option.text = ten_ChuDe;
+            option.selected = true;
+            document.getElementById("selct_ChuDe").add(option);
+            document.getElementById("Ma_ChuDe").value = -1;
+        }
+
+        function XacNhan_TacGia() {
+            var ketqua = "";
+            var _table = document.getElementById("tbl_TacGia");
+            for (var i = 1; i < _table.rows.length; i++) {
+                var ten_TG = document.getElementsByName("Ten_TG")[i - 1].value;
+                var vaitro = document.getElementsByName("select_Vaitro")[i - 1].value;
+                if (vaitro == "Chủ Biên") {
+                    ketqua += ten_TG + "(Chủ Biên), ";
+                }
+                else {
+                    ketqua += ten_TG + ", ";
+                }
+            }
+            ketqua = ketqua.substring(0, ketqua.length - 2);
+            document.getElementById("txt_TacGia").value = ketqua;
+        }
+
+        function ThemHang() {
+            var _table = document.getElementById("tbl_TacGia");
+            var _newRow = _table.insertRow();
+            var _Cell1 = _newRow.insertCell();
+            var _Cell2 = _newRow.insertCell();
+            var _Cell3 = _newRow.insertCell();
+            var _Cell4 = _newRow.insertCell();
+            _Cell1.innerHTML = '<input type="text"/>';
+            _Cell1.style.padding = "0 0 10px 0";
+            _Cell2.innerHTML = '<input type="text" style="width:80%;" name="Ten_TG" />';
+            _Cell2.innerHTML += ' <select onchange="Gan_TacGia(this)" style="width:20px;" name="select_Ten_TG"></select>';
+            _Cell3.innerHTML = '<select style="width:90%;" name="select_Vaitro"><option value = ' + "'Chủ Biên'" + '>Chủ Biên</option><option selected value=' + "'Tác Giả'" + '>Tác Giả</option></select>';
+            _Cell4.innerHTML = '<button onclick="ThemHang()"><b>+</b></button> <button onclick = "XoaHang(this)"><b>-</b></button>';
+
+            var _select_Source = document.getElementsByName("select_Ten_TG")[0];
+            var _select_Destination = document.getElementsByName("select_Ten_TG")[_newRow.rowIndex - 1];
+            _select_Destination.innerHTML = _select_Destination.innerHTML + _select_Source.innerHTML;
+        }
+        function XoaHang(_object) {
+            var _rowIndex = _object.offsetParent.parentNode.rowIndex;
+            var _table = document.getElementById("tbl_TacGia");
+            _table.deleteRow(_rowIndex);
+        }
+
+        function Preview(event) {
+            var _image = document.getElementById("id_Preview");
+            _image.src = URL.createObjectURL(event.target.files[0]);
+            _image.onload = function () {
+                URL.revokeObjectURL(_image.src) // free memory
+            }
+        }
+    </script>
+}

@@ -1,0 +1,237 @@
+﻿@{ 
+    string current_url = HttpContext.Current.Request.RawUrl.ToString();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!-- Theme skin::: Try Out different themes inside Content/skins folder-->
+    <link id="t-colors" href="~/Content/skins/default.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- start header -->
+        <header>
+            <div class="navbar navbar-default navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="~/"><img src="~/Content/img/logo.jpg" alt="" width="199" height="52" /></a>
+                    </div>
+                    <div class="navbar-collapse collapse ">
+                        <ul class="nav navbar-nav" style="float: left;">
+                            <!--Trang chủ-->
+                            <li class="dropdown active">
+                                @Html.ActionLink("Sách bán chạy", "Sach_BanChay", "Home")
+                            </li>
+                            <!--Trang hàng hóa-->
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle " data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false">Danh mục <i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Danh mục", "Danhmuc", "Sach")</li>
+                                    <li class="dropdown-submenu">
+                                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" data-hover="dropdown">Theo chủ đề</a>
+                                        <ul class="dropdown-menu">
+                                            @{
+                                                var list_ChuDe = CHUDE_DAO.ReadAll();
+                                                foreach (CHUDE cd in list_ChuDe)
+                                                {
+                                                    <li>
+                                                        @Html.ActionLink(cd.Ten_ChuDe, "Danhmuc", "Sach", routeValues: new { @Chude = cd.Ma_ChuDe }, htmlAttributes: null)
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" data-hover="dropdown">Theo nhà xuất bản</a>
+                                        <ul class="dropdown-menu">
+                                            @{
+                                                var list_NXB = NXB_DAO.ReadAll();
+                                                foreach (NHAXUATBAN nxb in list_NXB)
+                                                {
+                                                    <li>
+                                                        @Html.ActionLink(nxb.Ten_NXB, "Danhmuc", "Sach", routeValues: new { @Nxb = nxb.Ma_NXB }, htmlAttributes: null)
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle " data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false">Giỏ hàng <i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Xem giỏ hàng", "GioHang", "GioHang")</li>
+                                    <li>@Html.ActionLink("Thanh toán", "", "")</li>
+                                </ul>
+                            </li>
+                            @{
+                                string list_CN = null;
+                                if (Request.Cookies["ChucNang"] != null)
+                                {
+                                    list_CN = Request.Cookies["ChucNang"].Value;
+                                }
+                                if (list_CN != null && list_CN.Contains("CN1"))
+                                {
+                                    <li>@Html.ActionLink("Admin", "", "")</li>
+                                }
+                            }
+                            <li>@Html.ActionLink("Giới thiệu", "About", "Home")</li>
+                            <li>@Html.ActionLink("Liên hệ", "Contact", "Home")</li>
+                        </ul>
+                        <ul class="nav navbar-nav" style="float: right;">
+                            <li>
+                                <!--Phần login-->
+                                @if (Request.Cookies["TaiKhoan"] == null)
+                                {
+                                    @Html.ActionLink("Đăng nhập", "Login", "Account", routeValues: new {@url = current_url}, htmlAttributes: null)
+                                }
+                                else
+                                {
+                                    string tk = Request.Cookies["TaiKhoan"].Value;
+                                    <a href="#" class="dropdown-toggle " data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false">Welcome, @tk!<i class="fa fa-angle-down"></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("Đổi mật khẩu", "Change_Password", "Account")</li>
+                                        <li>@Html.ActionLink("Đăng xuất", "Logout", "Account")</li>
+                                    </ul>
+                                }
+                                <!-- Kết thúc login -->
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- end header -->
+
+        <!-- start content -->
+        <section id="content" style="padding: 20px 0 40px 0;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 col-lg-3">
+                        <aside class="left-sidebar">
+                            <div class="widget">
+                                <form role="form">
+                                    <div class="form-group">
+                                        @*<input type="text" class="form-control" id="search_Test" placeholder="Search..">*@
+                                        <div id="txtTimKiem">
+                                            @using (Html.BeginForm("KetQuaTimKiem", "TimKiem", FormMethod.Post))
+                                            {
+                                                @Html.TextBox("txtTimKiem", "", htmlAttributes: new { @class = "TextBoxTimKiem", @placeholder = "Nhập vào từ khóa cần tìm" })
+                                                <button type="submit">Tìm</button>
+                                            }
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="widget">
+                                <h5 class="widgetheading">CHỦ ĐỀ</h5>
+                                <ul class="cat">
+                                    @foreach (CHUDE cd in list_ChuDe)
+                                    {
+                                        <li><i class="fa fa-angle-right"></i>@Html.ActionLink(cd.Ten_ChuDe, "Danhmuc", "Sach", routeValues: new { @ChuDe = cd.Ma_ChuDe }, htmlAttributes: null) <span> (@cd.count)</span></li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="widget">
+                                <h5 class="widgetheading">NHÀ XUẤT BẢN</h5>
+                                <ul class="cat">
+                                    @foreach (NHAXUATBAN nxb in list_NXB)
+                                    {
+                                        <li><i class="fa fa-angle-right"></i>@Html.ActionLink(nxb.Ten_NXB, "Danhmuc", "Sach", routeValues: new { @NXB = nxb.Ma_NXB }, htmlAttributes: null) <span> (@nxb.count)</span></li>
+                                    }
+                                </ul>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="col-sm-9 col-lg-9">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end content -->
+
+        <!-- start footer -->
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 col-lg-3">
+                        <div class="widget">
+                            <h4>Pages</h4>
+                            <ul class="link-list">
+                                <li>@Html.ActionLink("Giới thiệu", "About", "Home")</li>
+                                <li>@Html.ActionLink("Liên hệ", "Contact", "Home")</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-lg-3">
+                        <div class="widget">
+                            <h4>Đăng ký nhận email</h4>
+                            <p>Điền email để nhận thông tin khuyến mãi mới hàng tháng</p>
+                            <div class="form-group multiple-form-group input-group">
+                                <input type="email" name="email" class="form-control">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-theme btn-add">Subscribe</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sub-footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="copyright">
+                                <p>&copy; Sailor Theme - All Right Reserved</p>
+                                <div class="credits">
+                                    <!--
+                                    All the links in the footer should remain intact.
+                                    You can delete the links only if you purchased the pro version.
+                                    Licensing information: https://bootstrapmade.com/license/
+                                    Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Sailor
+                                -->
+                                    <a href="https://bootstrapmade.com/free-business-bootstrap-themes-website-templates/">Business Bootstrap Themes</a> by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="social-network">
+                                <li><a href="#" data-placement="top" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#" data-placement="top" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#" data-placement="top" title="Linkedin"><i class="fa fa-linkedin"></i></a></li>
+                                <li><a href="#" data-placement="top" title="Pinterest"><i class="fa fa-pinterest"></i></a></li>
+                                <li><a href="#" data-placement="top" title="Google plus"><i class="fa fa-google-plus"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end footer -->
+
+    </div>
+    <a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    @Scripts.Render("~/bundles/CustomJS")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

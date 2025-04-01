@@ -1,0 +1,54 @@
+﻿@using WebsiteBanHang.Models;
+@model List<GIOHANG>
+@{
+    ViewBag.Title = "SuaGioHang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GioHang</h2>
+<table>
+    <tr>
+        <td>Mã sách</td>
+        <td>Tên sách</td>
+        <td>Ảnh bìa</td>
+        <td>Đơn giá</td>
+        <td>Số lượng</td>
+        <td>Thành tiền</td>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.maSach</td>
+            <td>@item.tenSach</td>
+            <td><img src = @String.Concat("/Content/img/AnhBia/", item.anhBia) width="50" height="50" /></td>
+            <td>@string.Format("{0:0,0}", item.giaBan) VNĐ</td>
+            @*Chỉnh sửa giỏ hàng gọi về action CapNhatGioHang*@
+            @using (Html.BeginForm("CapNhatGioHang", "GioHang", new { @MaSach = item.maSach }))
+            {
+                <td>@Html.TextBox("txtSoLuong", item.soLuong)</td>
+                <td>@string.Format("{0:0,0}", item.thanhTien) VNĐ</td>
+                <td>
+                    <input type="submit" value="Cập nhật" />
+                    <br />
+                    @*Xóa giỏ hàng gọi về action XoaGioHang*@
+                    @Html.ActionLink("Xóa", "XoaGioHang", new { @MaSach = item.maSach })
+                </td>
+
+            }
+        </tr>
+    }
+</table>
+
+@*Css giỏ hàng*@
+<style>
+    #divGioHang {
+        border: 1px solid #EEEEEE;
+        margin-left: 10%;
+    }
+
+        #divGioHang td {
+            padding: 10px;
+            border: 1px solid #EEEEEE;
+        }
+</style>

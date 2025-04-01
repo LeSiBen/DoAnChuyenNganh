@@ -1,0 +1,94 @@
+﻿@model WebsiteBanHang.Models.SACH
+@{
+    ViewBag.Title = "Xoa";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<h3>Bạn có chắc muốn xóa quyển sách này không</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Ma_Sach)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ma_Sach)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ten_Sach)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ten_Sach)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Gia_Ban)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Gia_Ban)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MoTa)
+        </dt>
+
+        <dd>
+            @Html.Raw(Model.MoTa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AnhBia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AnhBia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ngay_CapNhat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ngay_CapNhat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SoLuong_Ton)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SoLuong_Ton)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NHAXUATBAN.Ten_NXB)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NHAXUATBAN.Ten_NXB)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CHUDE.Ten_ChuDe)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CHUDE.Ten_ChuDe)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Xóa" class="btn btn-default" /> |
+            @Html.ActionLink("Trở về", "Index")
+        </div>
+    }
+</div>

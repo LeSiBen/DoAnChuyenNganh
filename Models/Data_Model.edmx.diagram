@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e41c1fa8de064359b7513e2816c9a4fe" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.CHITIET_DONHANG" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.CHUCNANG" Width="1.5" PointX="5.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.CHUDE" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.DON_DATHANG" Width="1.5" PointX="3" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.KHACHHANG" Width="1.5" PointX="0.75" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.LOAI_TAIKHOAN" Width="1.5" PointX="8" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.NHAXUATBAN" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.SACH" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.TAC_GIA" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.VIETSACH" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="Model.FK_CHITIET_DONDATHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_CHITIET_SACH" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_SACH_CHUDE" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_DONDATHANG_KHACHHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_SACH_NHAXUATBAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_VIETSACH_SACH" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_VIETSACH_TACGIA" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PHANQUYEN" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Model.TAIKHOAN" Width="1.5" PointX="10.25" PointY="7.125" />
+        <AssociationConnector Association="Model.FK_TAIKHOAN_LOAI_TAIKHOAN" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
